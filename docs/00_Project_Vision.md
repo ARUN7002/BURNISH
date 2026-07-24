@@ -675,3 +675,218 @@ These characteristics differentiate Burnish from manual workflows, rule-based au
 - AI reduces repetitive governance work while humans retain control.
 - Explainability and auditability build trust in every recommendation.
 - Burnish transforms metadata governance from a reactive process into a proactive one.
+---
+---
+
+# Competitive Landscape & Product Positioning
+
+## Introduction
+
+Modern organizations rely on metadata platforms to organize, discover, and govern enterprise data. While these platforms provide powerful capabilities for metadata management, maintaining high-quality metadata remains a continuous challenge.
+
+Most organizations still depend on manual governance activities, periodic reviews, and custom automation scripts to identify and resolve governance issues. As enterprise data continues to grow, these approaches become increasingly difficult to maintain.
+
+Burnish is designed to complement existing governance platforms by introducing intelligent, explainable, and human-centered AI into metadata governance workflows.
+
+---
+
+# Understanding the Current Landscape
+
+Organizations today typically adopt one of four approaches to metadata governance.
+
+## 1. Manual Governance
+
+Many organizations rely on dedicated governance teams to maintain metadata quality.
+
+### Strengths
+
+- Strong domain knowledge
+- Human judgment
+- Flexible decision making
+- Handles complex governance situations
+
+### Limitations
+
+- Time-consuming
+- Highly repetitive
+- Difficult to scale
+- Issues discovered late
+- High operational cost
+
+Although human expertise is essential, repetitive governance activities reduce productivity and increase governance backlog.
+
+---
+
+## 2. Metadata Platforms (DataHub)
+
+Platforms such as DataHub provide a centralized metadata ecosystem where organizations can discover datasets, visualize lineage, manage ownership, and improve governance.
+
+### Strengths
+
+- Rich metadata model
+- Dataset discovery
+- Lineage visualization
+- Ownership management
+- APIs for integration
+- Excellent governance foundation
+
+### Limitations
+
+Metadata platforms organize information but generally rely on users to identify governance gaps and take corrective action.
+
+Examples include:
+
+- Missing owners
+- Missing descriptions
+- Missing glossary terms
+- Broken lineage
+- Outdated documentation
+
+These activities still require continuous human attention.
+
+Burnish extends DataHub rather than replacing it.
+
+---
+
+## 3. Rule-Based Automation
+
+Organizations frequently build custom scripts to validate metadata quality.
+
+### Strengths
+
+- Fast execution
+- Easy to automate repetitive rules
+- Useful for predefined validations
+
+### Limitations
+
+- Cannot reason about context
+- Difficult to maintain over time
+- Limited flexibility
+- Generates alerts without meaningful recommendations
+
+Rule-based automation answers:
+
+"What is wrong?"
+
+Burnish answers:
+
+"What is wrong, why it happened, and how it can be fixed."
+
+---
+
+## 4. Enterprise Governance Suites
+
+Large enterprises often adopt comprehensive governance platforms.
+
+### Strengths
+
+- Broad governance capabilities
+- Enterprise integrations
+- Compliance support
+
+### Limitations
+
+- Expensive
+- Complex implementation
+- Requires specialized administration
+- Often difficult for smaller organizations
+
+Many organizations require intelligent governance assistance without adopting large enterprise platforms.
+
+---
+
+# Where Burnish Fits
+
+Burnish is positioned as an AI Governance Engineer built specifically for DataHub.
+
+It does not replace DataHub.
+
+It does not replace governance professionals.
+
+Instead, Burnish continuously improves metadata quality by combining AI reasoning with human oversight.
+
+Its purpose is to reduce repetitive governance work while preserving transparency, accountability, and organizational control.
+
+---
+
+# Competitive Comparison
+
+| Capability | Manual Governance | DataHub | Rule-Based Scripts | Burnish |
+|------------|------------------|----------|-------------------|----------|
+| Metadata Discovery | ✓ | ✓ | Limited | ✓ |
+| Detect Missing Metadata | Manual | Partial | ✓ | ✓ |
+| AI Reasoning | ✗ | ✗ | ✗ | ✓ |
+| Explain Recommendations | ✗ | ✗ | ✗ | ✓ |
+| Human Approval Workflow | Manual | Partial | ✗ | ✓ |
+| Continuous Monitoring | Limited | Partial | Scheduled | ✓ |
+| Audit Trail | Manual | Partial | Limited | ✓ |
+
+---
+
+# Why Burnish Is Different
+
+Burnish introduces intelligence into metadata governance.
+
+Instead of simply identifying governance issues, Burnish explains each issue, generates contextual recommendations, requests human approval, applies approved changes, and records every governance action for future auditing.
+
+This creates a governance workflow that is:
+
+- Explainable
+- Transparent
+- Human-centered
+- Intelligent
+- Scalable
+
+---
+
+# Why Now?
+
+Several technology trends make Burnish increasingly valuable.
+
+- Enterprise data ecosystems continue to grow rapidly.
+- Organizations are adopting metadata platforms such as DataHub.
+- AI agents are becoming capable of assisting with operational workflows.
+- Governance teams face increasing workloads with limited resources.
+- Organizations require trustworthy AI systems that remain transparent and auditable.
+
+Burnish addresses these challenges by combining intelligent automation with responsible human oversight.
+
+---
+
+# Product Positioning
+
+Burnish should be viewed as an AI Governance Engineer operating on top of DataHub.
+
+DataHub manages metadata.
+
+Burnish improves metadata quality.
+
+Together they create a smarter, faster, and more trustworthy governance ecosystem.
+
+---
+
+# Competitive Advantages
+
+Burnish differentiates itself through several unique capabilities.
+
+- AI-powered governance reasoning
+- Explainable recommendations
+- Human approval before execution
+- Continuous governance monitoring
+- Native DataHub integration
+- Complete audit history
+- Enterprise-ready architecture
+- Modular AI workflow
+
+---
+
+# Key Takeaways
+
+- Burnish complements DataHub rather than competing with it.
+- AI reduces repetitive governance work while humans remain in control.
+- Explainability builds trust in every recommendation.
+- Continuous monitoring improves metadata quality over time.
+- Burnish transforms governance from a reactive process into a proactive one.
+
+---
