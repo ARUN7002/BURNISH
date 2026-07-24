@@ -152,18 +152,157 @@ By combining artificial intelligence with DataHub's metadata platform, Burnish h
 
 ---
 
-## Document Information
+---
 
-**Project:** Burnish
+# Problem Validation & Stakeholder Analysis
 
-**Version:** 1.0
+## Understanding the Current Challenge
 
-**Status:** Draft
+Enterprise data continues to grow at an unprecedented rate. Modern organizations manage thousands of datasets distributed across multiple platforms, teams, and business units. While DataHub provides a centralized view of metadata, maintaining that metadata remains a continuous challenge.
 
-**Phase:** Phase 0 – Product Vision
+As datasets evolve, governance information often becomes incomplete or outdated. Dataset owners leave teams, documentation is forgotten, business glossary terms become inconsistent, and lineage relationships may no longer reflect reality. These gaps reduce confidence in enterprise data and create additional work for governance teams.
 
-**Session:** Session 1 – Burnish Identity
+Organizations need more than a metadata catalog—they need an intelligent assistant capable of continuously monitoring metadata quality and helping teams maintain it.
 
-**Author:** Arun J
+Burnish is designed to fill this gap.
 
-**Last Updated:** 23 July 2026
+---
+
+# Stakeholders
+
+Burnish creates value for multiple stakeholders across an organization.
+
+## Data Governance Teams
+
+Primary users responsible for maintaining metadata quality.
+
+Burnish reduces repetitive governance tasks by continuously identifying missing or inconsistent metadata and proposing intelligent recommendations.
+
+---
+
+## Data Engineers
+
+Data engineers frequently create and maintain datasets but often have limited time for documentation.
+
+Burnish assists them by identifying missing metadata and generating documentation suggestions that require only a quick review before approval.
+
+---
+
+## Data Analysts
+
+Analysts depend on trustworthy metadata to understand datasets and produce reliable reports.
+
+Improved metadata quality reduces the time spent searching for information and increases confidence in analytical results.
+
+---
+
+## Business Users
+
+Business stakeholders rely on trusted reports for decision-making.
+
+Well-governed metadata improves transparency and confidence in business intelligence across the organization.
+
+---
+
+## Platform Administrators
+
+Administrators oversee enterprise metadata platforms such as DataHub.
+
+Burnish provides continuous monitoring, governance insights, and auditability without increasing administrative overhead.
+
+---
+
+# Current Pain Points
+
+Organizations commonly experience the following governance challenges:
+
+- Missing dataset owners.
+- Incomplete dataset descriptions.
+- Missing business glossary terms.
+- Broken or outdated lineage.
+- Inconsistent metadata quality across domains.
+- Manual governance reviews consuming significant time.
+- Difficulty identifying governance issues before they affect downstream users.
+
+These challenges become more difficult as organizations continue to scale.
+
+---
+
+# Existing Workflow
+
+Today, governance teams typically follow a manual process.
+
+Create dataset
+
+↓
+
+Metadata becomes incomplete over time
+
+↓
+
+Periodic governance review
+
+↓
+
+Issues discovered manually
+
+↓
+
+Documentation updated manually
+
+↓
+
+Repeat
+
+This workflow is reactive, time-consuming, and difficult to scale.
+
+---
+
+# Burnish Workflow
+
+Burnish transforms governance into a continuous process.
+
+Dataset changes
+
+↓
+
+Burnish scans metadata
+
+↓
+
+Governance issues detected
+
+↓
+
+AI reasons about possible fixes
+
+↓
+
+User reviews recommendations
+
+↓
+
+Approved fixes applied to DataHub
+
+↓
+
+Audit log generated
+
+↓
+
+Metadata quality continuously improves
+
+---
+
+# Value Proposition
+
+Burnish delivers measurable value by:
+
+- Reducing manual governance effort.
+- Improving metadata completeness.
+- Increasing trust in enterprise data.
+- Providing explainable AI recommendations.
+- Maintaining human oversight for governance decisions.
+- Supporting continuous metadata quality improvement instead of periodic maintenance.
+
+Burnish allows governance teams to spend less time searching for problems and more time improving the organization's data ecosystem.
