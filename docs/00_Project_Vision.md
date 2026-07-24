@@ -443,3 +443,96 @@ A successful demonstration should clearly show how Burnish transforms manual gov
 Beyond the hackathon, Burnish aims to become an AI governance companion that continuously improves enterprise metadata quality without replacing human decision-making.
 
 Long-term success will be measured by the level of trust organizations place in Burnish to assist with governance operations while maintaining transparency, accountability, and human oversight.
+---
+
+# Future Vision & Product Roadmap
+
+## Building Beyond the MVP
+
+The hackathon submission represents the first version of Burnish. While the MVP focuses on solving high-impact metadata governance challenges inside DataHub, the long-term vision is to evolve Burnish into a comprehensive AI Governance Engineer capable of supporting enterprise-scale governance operations.
+
+Each future version expands Burnish's intelligence, automation, and organizational value while preserving human oversight and explainability.
+
+---
+
+# Version 1.0 — Hackathon MVP
+
+The first release focuses on demonstrating the core capabilities of Burnish.
+
+### Core Features
+
+- Scan DataHub metadata.
+- Detect missing owners.
+- Detect missing descriptions.
+- Detect missing glossary terms.
+- Generate AI-powered recommendations.
+- Explain every recommendation.
+- Allow users to approve changes.
+- Apply approved updates.
+- Record every action in an audit log.
+
+This version proves that AI can assist governance teams by automating repetitive governance tasks while keeping humans in control.
+
+---
+
+# Version 2.0 — Intelligent Governance
+
+The second release introduces proactive governance capabilities.
+
+### Planned Features
+
+- Confidence scoring for recommendations.
+- Scheduled governance scans.
+- Governance health dashboard.
+- Team notifications.
+- Governance policy templates.
+- Historical trend analysis.
+- Domain-specific governance reports.
+
+Burnish evolves from a recommendation engine into a governance assistant that continuously monitors metadata quality.
+
+---
+
+# Version 3.0 — Enterprise Governance Platform
+
+The third release expands Burnish into a platform suitable for large organizations.
+
+### Planned Features
+
+- Multi-domain governance.
+- Organization-wide governance analytics.
+- AI-powered governance insights.
+- Learning from historical approvals.
+- Cross-team governance collaboration.
+- Enterprise policy management.
+- Advanced governance automation.
+
+Burnish becomes an intelligent governance companion capable of supporting complex enterprise environments.
+
+---
+
+# Long-Term Product Vision
+
+In the future, Burnish aims to become the trusted AI Governance Engineer for every organization using DataHub.
+
+Rather than replacing governance professionals, Burnish will continuously monitor metadata quality, recommend improvements, learn from organizational decisions, and help governance teams maintain trusted enterprise data at scale.
+
+The ultimate goal is to make metadata governance proactive instead of reactive.
+
+---
+
+# Roadmap Summary
+
+| Version | Focus |
+|---------|-------|
+| Version 1.0 | Metadata scanning, AI recommendations, approvals, audit logs |
+| Version 2.0 | Intelligent monitoring, dashboards, notifications, governance insights |
+| Version 3.0 | Enterprise AI governance platform with organizational intelligence |
+
+---
+
+# Closing Vision
+
+Burnish is not intended to be a one-time hackathon project.
+
+It is designed as the foundation of an AI-powered governance platform that grows alongside modern enterprises, helping organizations maintain trusted, complete, and actionable metadata through intelligent automation and responsible AI.
