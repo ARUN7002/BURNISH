@@ -171,3 +171,173 @@ These features belong to future versions.
 - The MVP focuses on one clear workflow.
 - Every feature supports the hackathon demonstration.
 - Simplicity and reliability take priority over feature quantity.
+---
+---
+
+# Session 2 – Hackathon Rules Mapping
+
+## Objective
+
+A successful hackathon project is not measured only by technical quality—it must also satisfy the competition requirements.
+
+This session maps every core feature of Burnish directly to the official DataHub Agent Hackathon requirements to ensure that the MVP remains focused, compliant, and demo-ready.
+
+Every feature included in the MVP should strengthen our submission against the judging criteria.
+
+---
+
+# Hackathon Requirement Mapping
+
+| Official Requirement | Burnish MVP Implementation |
+|----------------------|----------------------------|
+| Use DataHub | Connect to a DataHub instance and retrieve metadata for analysis. |
+| Use MCP Server or Agent Context Kit | Integrate with the DataHub MCP Server to access metadata and perform governance operations. |
+| AI Agent | Burnish acts as an autonomous AI Governance Engineer that analyzes metadata and generates recommendations. |
+| Demonstrate Practical Value | Detect governance issues and assist users in improving metadata quality. |
+| Explain AI Decisions | Every recommendation includes a clear explanation of why the issue exists and why the proposed fix is appropriate. |
+| Human Approval | Governance changes require user approval before execution. |
+| Metadata Updates | Approved recommendations are written back to DataHub using supported APIs. |
+| Demo Ready | The complete workflow can be demonstrated in less than three minutes. |
+
+---
+
+# Burnish MVP Workflow
+
+The MVP is designed around a single end-to-end governance workflow.
+
+```
+User Opens Burnish
+
+↓
+
+Connect to DataHub
+
+↓
+
+Scan Metadata
+
+↓
+
+Detect Governance Issues
+
+↓
+
+AI Generates Recommendations
+
+↓
+
+Explain Recommendations
+
+↓
+
+User Reviews Suggestions
+
+↓
+
+Approve Changes
+
+↓
+
+Update DataHub
+
+↓
+
+Generate Audit Log
+
+↓
+
+Workflow Complete
+```
+
+This workflow represents the complete value proposition of Burnish and forms the foundation of the demonstration shown to judges.
+
+---
+
+# Feature Validation Checklist
+
+Every feature added to the MVP should satisfy the following checklist.
+
+| Question | Requirement |
+|----------|-------------|
+| Does it improve metadata governance? | Yes |
+| Does it use DataHub? | Yes |
+| Does it support AI reasoning? | Yes |
+| Can it be demonstrated in three minutes? | Yes |
+| Does it improve the judging experience? | Yes |
+| Is it achievable within the hackathon timeline? | Yes |
+
+If a feature cannot satisfy these questions, it should not be included in the MVP.
+
+---
+
+# MVP Principles
+
+During development, Burnish will follow these principles.
+
+### Build Only What Supports the Demo
+
+Every implemented feature should strengthen the end-to-end demonstration.
+
+---
+
+### Prefer Reliability Over Complexity
+
+A stable and complete workflow is more valuable than many incomplete features.
+
+---
+
+### Human Oversight is Mandatory
+
+Burnish assists governance teams but does not replace their decision-making authority.
+
+---
+
+### Explainability is a Core Feature
+
+Recommendations should always include understandable reasoning.
+
+---
+
+### Deliver a Complete User Journey
+
+The MVP should feel like a usable product rather than a collection of disconnected features.
+
+---
+
+# Risks and Mitigation
+
+| Risk | Mitigation |
+|------|------------|
+| Too many planned features | Strict MVP prioritization in the next session. |
+| Integration challenges | Use the official DataHub MCP Server and APIs. |
+| AI recommendations are unclear | Provide concise reasoning for every suggestion. |
+| Demo instability | Focus on one reliable workflow and test thoroughly. |
+| Time constraints | Build the Must Have features first and postpone others. |
+
+---
+
+# Definition of MVP Success
+
+The Burnish MVP will be considered successful if a judge can:
+
+- Launch the application.
+- Connect to DataHub.
+- Scan enterprise metadata.
+- Observe governance issues.
+- Understand AI-generated reasoning.
+- Approve recommendations.
+- Apply changes to DataHub.
+- Review the generated audit history.
+
+The entire experience should be completed smoothly within the three-minute demonstration window.
+
+---
+
+# Key Takeaways
+
+- Every Burnish feature maps directly to a hackathon requirement.
+- The MVP focuses on one complete governance workflow.
+- Simplicity and reliability take priority over feature quantity.
+- Every development decision should strengthen the final demonstration.
+
+---
