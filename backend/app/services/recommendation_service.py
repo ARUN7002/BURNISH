@@ -1,5 +1,6 @@
 from app.models.issue import GovernanceIssue
 from app.models.recommendation import Recommendation
+from app.services.explanation_service import generate_explanation
 
 
 def generate_recommendation(issue: GovernanceIssue) -> Recommendation:
@@ -13,7 +14,7 @@ def generate_recommendation(issue: GovernanceIssue) -> Recommendation:
             issue_type=issue.issue_type,
             recommendation="Assign the appropriate Data Engineering team as owner.",
             confidence=95,
-            reason="Every production dataset should have a responsible owner.",
+            reason=generate_explanation(issue),
         )
 
     elif issue.issue_type == "Missing Description":
@@ -22,7 +23,7 @@ def generate_recommendation(issue: GovernanceIssue) -> Recommendation:
             issue_type=issue.issue_type,
             recommendation="Add a clear business description for the dataset.",
             confidence=90,
-            reason="Descriptions help analysts understand dataset purpose.",
+            reason=generate_explanation(issue),
         )
 
     elif issue.issue_type == "Missing Glossary":
@@ -31,7 +32,7 @@ def generate_recommendation(issue: GovernanceIssue) -> Recommendation:
             issue_type=issue.issue_type,
             recommendation="Attach relevant business glossary terms.",
             confidence=88,
-            reason="Glossary terms improve business understanding.",
+            reason=generate_explanation(issue),
         )
 
     elif issue.issue_type == "Missing Lineage":
@@ -40,7 +41,7 @@ def generate_recommendation(issue: GovernanceIssue) -> Recommendation:
             issue_type=issue.issue_type,
             recommendation="Configure upstream and downstream lineage.",
             confidence=94,
-            reason="Lineage improves traceability and impact analysis.",
+            reason=generate_explanation(issue),
         )
 
     return Recommendation(
@@ -48,9 +49,13 @@ def generate_recommendation(issue: GovernanceIssue) -> Recommendation:
         issue_type=issue.issue_type,
         recommendation="Manual governance review required.",
         confidence=50,
-        reason="No recommendation available.",
+        reason=generate_explanation(issue),
     )
-def generate_all_recommendations(issues: list[GovernanceIssue]) -> list[Recommendation]:
+
+
+def generate_all_recommendations(
+    issues: list[GovernanceIssue],
+) -> list[Recommendation]:
     """
     Generate recommendations for all governance issues.
     """
