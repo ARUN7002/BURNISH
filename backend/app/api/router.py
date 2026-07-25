@@ -5,6 +5,9 @@ from app.services.priority_service import (
     prioritize_issues,
     generate_summary,
 )
+from app.services.recommendation_service import (
+    generate_all_recommendations,
+)
 
 router = APIRouter()
 
@@ -12,21 +15,25 @@ router = APIRouter()
     "/scan",
     tags=["Governance"],
     summary="Scan datasets for governance issues",
-    description="Scans enterprise datasets, detects governance issues, prioritizes them by severity, and returns a governance summary.",
+    description="Scans enterprise datasets, detects governance issues, prioritizes them by severity, and returns governance recommendations.",
 )
 def scan():
-    # Scan all datasets
+
+    # Scan datasets
     issues = scan_dataset()
 
-    # Sort issues by severity
+    # Prioritize issues
     prioritized = prioritize_issues(issues)
 
     # Generate summary
     summary = generate_summary(prioritized)
 
-    # Return response
+    # Generate AI recommendations
+    recommendations = generate_all_recommendations(prioritized)
+
     return {
         "summary": summary,
         "total_issues": len(prioritized),
         "issues": prioritized,
+        "recommendations": recommendations,
     }
