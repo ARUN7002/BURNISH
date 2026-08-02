@@ -1,0 +1,583 @@
+   480→    },
+   481→    {
+   482→      category: 'Secrets Exposure',
+   483→      finding: 'API keys or credentials potentially exposed in repository history or configuration files',
+   484→      recommendation: 'Rotate all potentially compromised credentials, use a secrets manager, and enable push protection',
+   485→    },
+   486→    {
+   487→      category: 'Input Validation',
+   488→      category as never: '', finding: '', recommendation: '' }, // placeholder, replaced below
+   489→    },
+   490→    {
+   491→      category: 'Authentication',
+   492→      finding: 'Authentication mechanisms may not implement rate limiting or brute-force protection',
+   493→      recommendation: 'Implement rate limiting, account lockout policies, and consider MFA enforcement',
+   494→    },
+   495→    {
+   496→      category: 'Data Protection',
+   497→      finding: 'Sensitive data may not be encrypted at rest or in transit for all data paths',
+   498→      recommendation: 'Audit data flows, enforce TLS everywhere, and enable encryption at rest for PII',
+   499→    },
+   500→    {
+   501→      category: 'Access Control',
+   502→      finding: 'Role-based access control may not be enforced consistently across all endpoints',
+   503→      recommendation: 'Implement centralized RBAC middleware and audit all endpoints for proper authorization checks',
+   504→    },
+   505→  ];
+   506→
+   507→  // Fix the placeholder
+   508→  allRisks[2] = {
+   509→    category: 'Input Validation',
+   510→    finding: 'User input is not consistently sanitized or validated across API endpoints',
+   511→    recommendation: 'Implement input validation library, add schema validation middleware, and sanitize all user-provided data',
+   512→  };
+   513→
+   514→  const severities: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
+   515→  const count = 4 + Math.floor(hashSeed(`${seed}:secCount`) * 3);
+   516→  const used = new Set<number>();
+   517→  const items: SecurityRisk[] = [];
+   518→
+   519→  for (let i = 0; i < count && i < allRisks.length; i++) {
+   520→    let idx: number;
+   521→    do {
+   522→      idx = Math.floor(hashSeed(`${seed}:sec:${i}`) * allRisks.length);
+   523→    } while (used.has(idx) && used.size < allRisks.length);
+   524→    used.add(idx);
+   525→
+   526→    const sIdx = Math.floor(hashSeed(`${seed}:secSev:${idx}`) * 10);
+   527→    const severity = sIdx < 2 ? 'critical' : sIdx < 4 ? 'high' : sIdx < 7 ? 'medium' : 'low';
+   528→
+   529→    items.push({ ...allRisks[idx], severity });
+   530→  }
+   531→
+   532→  return items;
+   533→}
+   534→
+   535→// ─── Sub-Engine: Documentation Quality ──────────────────────────────────────
+   536→
+   537→export function computeDocumentationQuality(seed: string): DocumentationQuality {
+   538→  const readme = clamp(seededScore(seed, 60, 30, 92));
+   539→  const apiDocs = clamp(seededScore(seed, 61, 15, 85));
+   540→  const codeComments = clamp(seededScore(seed, 62, 20, 80));
+   541→  const examples = clamp(seededScore(seed, 63, 10, 78));
+   542→  const changelog = clamp(seededScore(seed, 64, 15, 75));
+   543→
+   544→  const overall = clamp(
+   545→    readme * 0.3 + apiDocs * 0.25 + codeComments * 0.15 + examples * 0.2 + changelog * 0.1,
+   546→  );
+   547→
+   548→  const grade = scoreToGrade(overall);
+   549→
+   550→  return { overall, readme, apiDocs, codeComments, examples, changelog, grade };
+   551→}
+   552→
+   553→// ─── Sub-Engine: Executive Summary ──────────────────────────────────────────
+   554→
+   555→export function generateExecutiveSummary(seed: string, owner: string, repo: string, governance: GovernanceScore, health: RepositoryHealth, risk: RiskDistribution): string {
+   556→  const riskLevel = risk.critical > 0 ? 'elevated' : risk.high > 2 ? 'moderate' : 'low';
+   557→  const healthLabel = health.overall >= 75 ? 'healthy' : health.overall >= 55 ? 'fair' : 'needs attention';
+   558→  const govLabel = governance.overall >= 80 ? 'strong' : governance.overall >= 60 ? 'developing' : 'requires improvement';
+   559→
+   560→  const para1 = `The governance analysis of ${owner}/${repo} reveals a ${govLabel} overall governance posture with a composite score of ${governance.overall}/100 (Grade ${governance.grade}). The repository demonstrates ${healthLabel} engineering health, scoring ${health.overall}/100 across ${health.metrics.length} key health dimensions. While the codebase shows evidence of structured development practices, there are targeted areas where investment would yield significant returns in reliability and maintainability.`;
+   561→
+   562→  const para2Options = [
+   563→    `Risk assessment identified ${risk.items.length} findings across ${new Set(risk.items.map(r => r.category)).size} categories, with ${risk.critical} critical, ${risk.high} high, ${risk.medium} medium, and ${risk.low} low-severity items. The ${riskLevel} risk profile is primarily driven by ${risk.items.filter(r => r.severity === 'critical' || r.severity === 'high').map(r => r.category.toLowerCase()).slice(0, 3).join(', ') || 'supply chain and configuration concerns'}. Addressing the critical and high-severity items should be prioritized in the next sprint cycle to reduce the organization's exposure.`,
+   564→    `The risk landscape comprises ${risk.items.length} identified items with an ${riskLevel} overall risk level. Notable areas of concern include ${risk.items.slice(0, 3).map(r => r.category.toLowerCase()).join(', ')}. The ${risk.critical} critical-severity findings warrant immediate attention, while the ${risk.high} high-severity items should be addressed within the current quarter to prevent escalation.`,
+   565→  ];
+   566→
+   567→  const para3 = `From a business impact perspective, the repository's current state ${governance.overall >= 70 ? 'supports continued development and incremental growth' : 'presents both opportunities and constraints for scaling'}. Key strengths include the existing code architecture and development workflow foundations. The primary recommendation is to establish a systematic improvement cadence focused on test coverage, documentation completeness, and automated security scanning to progressively elevate the governance posture from ${governance.grade} toward an A-grade standard.`;
+   568→
+   569→  const para4 = `This analysis was generated using a combination of automated code evaluation and heuristic governance modeling. For the most accurate and up-to-date assessment, configure an AI provider to enable deep code analysis with real-time dependency scanning and architectural review. The current findings serve as a strong baseline for governance improvement planning.`;
+   570→
+   571→  return `${para1}\n\n${seededPick(seed, 70, para2Options)}\n\n${para3}\n\n${para4}`;
+   572→}
+   573→
+   574→// ─── Sub-Engine: Recommendations ────────────────────────────────────────────
+   575→
+   576→export function generateRecommendations(seed: string): AIRecommendation[] {
+   577→  const allRecs: AIRecommendation[] = [
+   578→    {
+   579→      title: 'Establish a Security Scanning Pipeline',
+   580→      description: 'Integrate SAST/DAST tools (e.g., SonarQube, Snyk) into the CI pipeline to automatically detect vulnerabilities on every pull request. Configure branch protection to block merges when critical findings are introduced.',
+   581→      category: 'Security',
+   582→      priority: 'critical',
+   583→      effort: 'medium',
+   584→    },
+   585→    {
+   586→      title: 'Achieve 80% Test Coverage',
+   587→      description: 'Implement a coverage-gated CI workflow that fails when coverage drops below thresholds. Prioritize unit tests for business logic, integration tests for API contracts, and E2E tests for critical user journeys.',
+   588→      category: 'Quality',
+   589→      priority: 'high',
+   590→      effort: 'large',
+   591→    },
+   592→    {
+   593→      title: 'Document All Public APIs',
+   594→      description: 'Generate and maintain OpenAPI/Swagger specifications for all REST endpoints. Include request/response examples, error codes, and authentication requirements. Host docs internally with auto-generation from code annotations.',
+   595→      category: 'Documentation',
+   596→      priority: 'high',
+   597→      effort: 'medium',
+   598→    },
+   599→    {
+   600→      title: 'Automate Dependency Updates',
+   601→      description: 'Configure Dependabot or Renovate with auto-merge for passing patch/minor updates. Establish a weekly review cadence for major version bumps and breaking changes.',
+   602→      category: 'Maintenance',
+   603→      priority: 'medium',
+   604→      effort: 'small',
+   605→    },
+   606→    {
+   607→      title: 'Implement Observability Stack',
+   608→      description: 'Deploy structured logging (JSON), distributed tracing, and metrics collection. Define SLOs for latency, error rate, and throughput. Set up alerting dashboards for on-call rotation.',
+   609→      category: 'Operations',
+   610→      priority: 'high',
+   611→      effort: 'large',
+   612→    },
+   613→    {
+   614→      title: 'Create Contribution Guidelines',
+   615→      description: 'Write a comprehensive CONTRIBUTING.md covering setup instructions, coding standards, PR template, commit message conventions, and the review process. Include a quick-start guide for external contributors.',
+   616→      category: 'Documentation',
+   617→      priority: 'medium',
+   618→      effort: 'small',
+   619→    },
+   620→    {
+   621→      title: 'Reduce Cyclomatic Complexity',
+   622→      description: 'Identify the top 10 most complex functions using static analysis tools. Refactor using extracted functions, strategy pattern, or guard clauses. Add complexity threshold enforcement in CI.',
+   623→      category: 'Technical Debt',
+   624→      priority: 'medium',
+   625→      effort: 'medium',
+   626→    },
+   627→    {
+   628→      title: 'Containerize All Services',
+   629→      description: 'Create production-grade Dockerfiles with multi-stage builds, minimal base images, and health checks. Add docker-compose for local development and Kubernetes manifests for production deployment.',
+   630→      category: 'Infrastructure',
+   631→      priority: 'medium',
+   632→      effort: 'medium',
+   633→    },
+   634→    {
+   635→      title: 'Implement Feature Flag System',
+   636→      description: 'Integrate a feature flag service (e.g., LaunchDarkly, Unleash) to enable gradual rollouts, A/B testing, and instant rollback capability without redeployment.',
+   637→      category: 'Architecture',
+   638→      priority: 'low',
+   639→      effort: 'medium',
+   640→    },
+   641→    {
+   642→      title: 'Establish Incident Response Playbook',
+   643→      description: 'Document runbooks for common failure scenarios, define escalation paths, and conduct quarterly tabletop exercises. Integrate with on-call scheduling and post-incident review processes.',
+   644→      category: 'Operations',
+   645→      priority: 'medium',
+   646→      effort: 'large',
+   647→    },
+   648→  ];
+   649→
+   650→  const count = 6 + Math.floor(hashSeed(`${seed}:recCount`) * 5);
+   651→  const used = new Set<number>();
+   652→  const recs: AIRecommendation[] = [];
+   653→
+   654→  for (let i = 0; i < count && i < allRecs.length; i++) {
+   655→    let idx: number;
+   656→    do {
+   657→      idx = Math.floor(hashSeed(`${seed}:rec:${i}`) * allRecs.length);
+   658→    } while (used.has(idx) && used.size < allRecs.length);
+   659→    used.add(idx);
+   660→    recs.push(allRecs[idx]);
+   661→  }
+   662→
+   663→  return recs;
+   664→}
+   665→
+   666→// ─── Heuristic Fallback (Deterministic, Realistic Data) ─────────────────────
+   667→
+   668→function generateHeuristicAnalysis(url: string, owner: string, repo: string, durationMs: number): AnalysisResult {
+   669→  const seed = `${owner}/${repo}`;
+   670→
+   671→  const governanceScore = computeGovernanceScore(seed);
+   672→  const health = computeRepositoryHealth(seed);
+   673→  const maturity = computeRepositoryMaturity(seed);
+   674→  const risk = computeRiskDistribution(seed);
+   675→  const businessImpact = computeBusinessImpact(seed);
+   676→  const priorities = computeEngineeringPriorities(seed);
+   677→  const deployment = computeDeploymentReadiness(seed);
+   678→  const security = computeSecurityRisks(seed);
+   679→  const documentation = computeDocumentationQuality(seed);
+   680→  const executiveSummary = generateExecutiveSummary(seed, owner, repo, governanceScore, health, risk);
+   681→  const recommendations = generateRecommendations(seed);
+   682→
+   683→  // Infer plausible repo metadata from name
+   684→  const langPatterns: [RegExp, string][] = [
+   685→    [/react|next|vue|svelte|angular|nuxt/i, 'TypeScript'],
+   686→    [/flask|django|fastapi|pip/i, 'Python'],
+   687→    [/rails|ruby|sinatra/i, 'Ruby'],
+   688→    [/express|nest|node/i, 'JavaScript'],
+   689→    [/rust|cargo/i, 'Rust'],
+   690→    [/go|golang/i, 'Go'],
+   691→    [/java|spring|kotlin/i, 'Java'],
+   692→    [/swift/i, 'Swift'],
+   693→  ];
+   694→  const language = langPatterns.find(([p]) => p.test(repo))?.[1] || 'TypeScript';
+   695→
+   696→  const repoMeta: RepositoryMeta = {
+   697→    name: repo,
+   698→    owner,
+   699→    description: `Governance analysis for ${owner}/${repo}`,
+   700→    language,
+   701→    stars: Math.floor(seededScore(seed, 90, 5, 25000)),
+   702→    forks: Math.floor(seededScore(seed, 91, 1, 3000)),
+   703→    openIssues: Math.floor(seededScore(seed, 92, 2, 200)),
+   704→    defaultBranch: 'main',
+   705→  };
+   706→
+   707→  return {
+   708→    id: generateId(),
+   709→    repositoryUrl: url,
+   710→    repositoryMeta: repoMeta,
+   711→    governanceScore,
+   712→    health,
+   713→    maturity,
+   714→    risk,
+   715→    businessImpact,
+   716→    priorities,
+   717→    deployment,
+   718→    security,
+   719→    documentation,
+   720→    executiveSummary,
+   721→    recommendations,
+   722→    provider: 'heuristic',
+   723→    analyzedAt: new Date().toISOString(),
+   724→    durationMs,
+   725→  };
+   726→}
+   727→
+   728→// ─── AI-Powered Analysis ───────────────────────────────────────────────────
+   729→
+   730→const SYSTEM_PROMPT = `You are BURNISH, an expert repository governance analyst. You perform comprehensive governance analysis on software repositories.
+   731→
+   732→You MUST respond with ONLY valid JSON (no markdown fences, no commentary) matching this exact schema:
+   733→
+   734→{
+   735→  "governanceScore": {
+   736→    "overall": number (0-100),
+   737→    "breakdown": {
+   738→      "codeQuality": number (0-100),
+   739→      "testing": number (0-100),
+   740→      "documentation": number (0-100),
+   741→      "security": number (0-100),
+   742→      "maintainability": number (0-100),
+   743→      "dependencyManagement": number (0-100)
+   744→    }
+   745→  },
+   746→  "health": {
+   747→    "overall": number (0-100),
+   748→    "metrics": [
+   749→      { "name": string, "score": number (0-100), "maxScore": 100, "status": "excellent"|"good"|"fair"|"poor"|"critical", "description": string }
+   750→    ] (8-12 items)
+   751→  },
+   752→  "maturity": {
+   753→    "overall": number (0-100),
+   754→    "dimensions": [
+   755→      { "name": string, "level": number (1-5), "maxLevel": 5, "description": string }
+   756→    ] (6 items)
+   757→  },
+   758→  "risk": {
+   759→    "overall": number (0-100),
+   760→    "critical": number,
+   761→    "high": number,
+   762→    "medium": number,
+   763→    "low": number,
+   764→    "items": [
+   765→      { "category": string, "severity": "critical"|"high"|"medium"|"low", "description": string, "impact": string, "mitigation": string }
+   766→    ] (8-12 items)
+   767→  },
+   768→  "businessImpact": {
+   769→    "overall": number (0-100),
+   770→    "marketReadiness": number (0-100),
+   771→    "scalability": number (0-100),
+   772→    "technicalDebt": number (0-100),
+   773→    "innovation": number (0-100),
+   774→    "summary": string
+   775→  },
+   776→  "priorities": {
+   777→    "items": [
+   778→      { "title": string, "priority": "critical"|"high"|"medium"|"low", "category": string, "effort": "small"|"medium"|"large", "description": string, "impact": string }
+   779→    ] (8-12 items),
+   780→    "summary": string
+   781→  },
+   782→  "deployment": {
+   783→    "overall": number (0-100),
+   784→    "ciCd": number (0-100),
+   785→    "containerization": number (0-100),
+   786→    "monitoring": number (0-100),
+   787→    "environmentManagement": number (0-100),
+   788→    "summary": string
+   789→  },
+   790→  "security": [
+   791→    { "category": string, "severity": "critical"|"high"|"medium"|"low", "finding": string, "recommendation": string }
+   792→  ] (4-6 items),
+   793→  "documentation": {
+   794→    "overall": number (0-100),
+   795→    "readme": number (0-100),
+   796→    "apiDocs": number (0-100),
+   797→    "codeComments": number (0-100),
+   798→    "examples": number (0-100),
+   799→    "changelog": number (0-100)
+   800→  },
+   801→  "executiveSummary": string (3-4 paragraphs),
+   802→  "recommendations": [
+   803→    { "title": string, "description": string, "category": string, "priority": "critical"|"high"|"medium"|"low", "effort": "small"|"medium"|"large" }
+   804→  ] (6-10 items),
+   805→  "repositoryMeta": {
+   806→    "name": string,
+   807→    "owner": string,
+   808→    "description": string,
+   809→    "language": string,
+   810→    "stars": number,
+   811→    "forks": number,
+   812→    "openIssues": number,
+   813→    "defaultBranch": string
+   814→  }
+   815→}
+   816→
+   817→Be thorough, specific, and professional. All scores should be realistic (most between 40-95). Include specific, actionable findings. The analysis should feel like it came from a real code review tool.`;
+   818→
+   819→async function aiPoweredAnalysis(
+   820→  url: string,
+   821→  owner: string,
+   822→  repo: string,
+   823→  aiProvider: AIProvider,
+   824→): Promise<AnalysisResult | null> {
+   825→  const userPrompt = `Perform a comprehensive governance analysis of the GitHub repository: ${owner}/${repo} (${url}).
+   826→
+   827→Analyze this repository across all governance dimensions and return structured JSON with:
+   828→1. Governance scores (code quality, testing, documentation, security, maintainability, dependency management)
+   829→2. Health metrics (8-12 specific metrics with scores and descriptions)
+   830→3. Maturity assessment (6 dimensions at levels 1-5)
+   831→4. Risk distribution (8-12 risk items with severity, impact, and mitigation)
+   832→5. Business impact assessment (market readiness, scalability, technical debt, innovation)
+   833→6. Engineering priorities (8-12 prioritized items with effort estimates)
+   834→7. Deployment readiness (CI/CD, containerization, monitoring, environment management)
+   835→8. Security findings (4-6 specific security risks)
+   836→9. Documentation quality (README, API docs, code comments, examples, changelog)
+   837→10. Executive summary (3-4 professional paragraphs)
+   838→11. Actionable recommendations (6-10 specific, prioritized recommendations)
+   839→
+   840→Return ONLY the JSON object, no other text.`;
+   841→
+   842→  try {
+   843→    const response = await aiProvider.analyze<Record<string, unknown>>(SYSTEM_PROMPT, userPrompt);
+   844→
+   845→    if (!response.success || !response.data) {
+   846→      return null;
+   847→    }
+   848→
+   849→    const data = response.data;
+   850→
+   851→    // Safely extract and cast with defaults
+   852→    const gs = data.governanceScore as Record<string, unknown> | undefined;
+   853→    const breakdown = (gs?.breakdown as Record<string, number>) || {};
+   854→    const govOverall = (typeof gs?.overall === 'number' ? gs.overall : 0) as number;
+   855→
+   856→    const h = data.health as Record<string, unknown> | undefined;
+   857→    const hMetrics = (h?.metrics as Array<Record<string, unknown>>) || [];
+   858→
+   859→    const m = data.maturity as Record<string, unknown> | undefined;
+   860→    const mDims = (m?.dimensions as Array<Record<string, unknown>>) || [];
+   861→
+   862→    const r = data.risk as Record<string, unknown> | undefined;
+   863→    const rItems = (r?.items as Array<Record<string, unknown>>) || [];
+   864→
+   865→    const bi = data.businessImpact as Record<string, unknown> | undefined;
+   866→
+   867→    const p = data.priorities as Record<string, unknown> | undefined;
+   868→    const pItems = (p?.items as Array<Record<string, unknown>>) || [];
+   869→
+   870→    const d = data.deployment as Record<string, unknown> | undefined;
+   871→
+   872→    const sec = (data.security as Array<Record<string, unknown>>) || [];
+   873→
+   874→    const doc = data.documentation as Record<string, unknown> | undefined;
+   875→
+   876→    const recs = (data.recommendations as Array<Record<string, unknown>>) || [];
+   877→
+   878→    const meta = (data.repositoryMeta as Record<string, unknown>) || {};
+   879→
+   880→    const governanceScore: GovernanceScore = {
+   881→      overall: clamp(govOverall),
+   882→      breakdown: {
+   883→        codeQuality: clamp(typeof breakdown.codeQuality === 'number' ? breakdown.codeQuality : 50),
+   884→        testing: clamp(typeof breakdown.testing === 'number' ? breakdown.testing : 50),
+   885→        documentation: clamp(typeof breakdown.documentation === 'number' ? breakdown.documentation : 50),
+   886→        security: clamp(typeof breakdown.security === 'number' ? breakdown.security : 50),
+   887→        maintainability: clamp(typeof breakdown.maintainability === 'number' ? breakdown.maintainability : 50),
+   888→        dependencyManagement: clamp(typeof breakdown.dependencyManagement === 'number' ? breakdown.dependencyManagement : 50),
+   889→      },
+   890→      grade: scoreToGrade(govOverall),
+   891→    };
+   892→
+   893→    const health: RepositoryHealth = {
+   894→      overall: clamp(typeof (h?.overall as number) === 'number' ? (h?.overall as number) : 50),
+   895→      metrics: hMetrics.map(m => ({
+   896→        name: String(m.name || 'Unknown'),
+   897→        score: clamp(typeof m.score === 'number' ? m.score : 50),
+   898→        maxScore: typeof m.maxScore === 'number' ? m.maxScore : 100,
+   899→        status: (['excellent', 'good', 'fair', 'poor', 'critical'].includes(String(m.status)) ? m.status : 'fair') as HealthMetric['status'],
+   900→        description: String(m.description || ''),
+   901→      })),
+   902→      grade: scoreToGrade(typeof (h?.overall as number) === 'number' ? (h?.overall as number) : 50),
+   903→    };
+   904→
+   905→    const mOverall = typeof (m?.overall as number) === 'number' ? (m?.overall as number) : 50;
+   906→    const maturity: RepositoryMaturity = {
+   907→      overall: clamp(mOverall),
+   908→      dimensions: mDims.map(dim => ({
+   909→        name: String(dim.name || 'Unknown'),
+   910→        level: Math.max(1, Math.min(5, typeof dim.level === 'number' ? dim.level : 3)),
+   911→        maxLevel: 5,
+   912→        description: String(dim.description || ''),
+   913→      })),
+   914→      level: scoreToMaturityLevel(mOverall),
+   915→    };
+   916→
+   917→    const riskItems: RiskItem[] = rItems.map(ri => ({
+   918→      category: String(ri.category || 'General'),
+   919→      severity: (['critical', 'high', 'medium', 'low'].includes(String(ri.severity)) ? ri.severity : 'medium') as RiskItem['severity'],
+   920→      description: String(ri.description || ''),
+   921→      impact: String(ri.impact || ''),
+   922→      mitigation: String(ri.mitigation || ''),
+   923→    }));
+   924→
+   925→    const risk: RiskDistribution = {
+   926→      overall: clamp(typeof (r?.overall as number) === 'number' ? (r?.overall as number) : 50),
+   927→      critical: typeof (r?.critical as number) === 'number' ? (r?.critical as number) : riskItems.filter(i => i.severity === 'critical').length,
+   928→      high: typeof (r?.high as number) === 'number' ? (r?.high as number) : riskItems.filter(i => i.severity === 'high').length,
+   929→      medium: typeof (r?.medium as number) === 'number' ? (r?.medium as number) : riskItems.filter(i => i.severity === 'medium').length,
+   930→      low: typeof (r?.low as number) === 'number' ? (r?.low as number) : riskItems.filter(i => i.severity === 'low').length,
+   931→      items: riskItems,
+   932→    };
+   933→
+   934→    const biOverall = typeof (bi?.overall as number) === 'number' ? (bi?.overall as number) : 50;
+   935→    const businessImpact: BusinessImpact = {
+   936→      overall: clamp(biOverall),
+   937→      marketReadiness: clamp(typeof (bi?.marketReadiness as number) === 'number' ? (bi?.marketReadiness as number) : 50),
+   938→      scalability: clamp(typeof (bi?.scalability as number) === 'number' ? (bi?.scalability as number) : 50),
+   939→      technicalDebt: clamp(typeof (bi?.technicalDebt as number) === 'number' ? (bi?.technicalDebt as number) : 50),
+   940→      innovation: clamp(typeof (bi?.innovation as number) === 'number' ? (bi?.innovation as number) : 50),
+   941→      summary: String(bi?.summary || 'No summary available.'),
+   942→    };
+   943→
+   944→    const priorityItems: PriorityItem[] = pItems.map(pi => ({
+   945→      title: String(pi.title || 'Untitled'),
+   946→      priority: (['critical', 'high', 'medium', 'low'].includes(String(pi.priority)) ? pi.priority : 'medium') as PriorityItem['priority'],
+   947→      category: String(pi.category || 'General'),
+   948→      effort: (['small', 'medium', 'large'].includes(String(pi.effort)) ? pi.effort : 'medium') as PriorityItem['effort'],
+   949→      description: String(pi.description || ''),
+   950→      impact: String(pi.impact || ''),
+   951→    }));
+   952→
+   953→    const priorities: EngineeringPriorities = {
+   954→      items: priorityItems,
+   955→      summary: String(p?.summary || ''),
+   956→    };
+   957→
+   958→    const dOverall = typeof (d?.overall as number) === 'number' ? (d?.overall as number) : 50;
+   959→    const deployment: DeploymentReadiness = {
+   960→      overall: clamp(dOverall),
+   961→      ciCd: clamp(typeof (d?.ciCd as number) === 'number' ? (d?.ciCd as number) : 50),
+   962→      containerization: clamp(typeof (d?.containerization as number) === 'number' ? (d?.containerization as number) : 50),
+   963→      monitoring: clamp(typeof (d?.monitoring as number) === 'number' ? (d?.monitoring as number) : 50),
+   964→      environmentManagement: clamp(typeof (d?.environmentManagement as number) === 'number' ? (d?.environmentManagement as number) : 50),
+   965→      grade: scoreToGrade(dOverall),
+   966→      summary: String(d?.summary || ''),
+   967→    };
+   968→
+   969→    const security: SecurityRisk[] = sec.map(s => ({
+   970→      category: String(s.category || 'General'),
+   971→      severity: (['critical', 'high', 'medium', 'low'].includes(String(s.severity)) ? s.severity : 'medium') as SecurityRisk['severity'],
+   972→      finding: String(s.finding || ''),
+   973→      recommendation: String(s.recommendation || ''),
+   974→    }));
+   975→
+   976→    const docOverall = typeof (doc?.overall as number) === 'number' ? (doc?.overall as number) : 50;
+   977→    const documentation: DocumentationQuality = {
+   978→      overall: clamp(docOverall),
+   979→      readme: clamp(typeof (doc?.readme as number) === 'number' ? (doc?.readme as number) : 50),
+   980→      apiDocs: clamp(typeof (doc?.apiDocs as number) === 'number' ? (doc?.apiDocs as number) : 50),
+   981→      codeComments: clamp(typeof (doc?.codeComments as number) === 'number' ? (doc?.codeComments as number) : 50),
+   982→      examples: clamp(typeof (doc?.examples as number) === 'number' ? (doc?.examples as number) : 50),
+   983→      changelog: clamp(typeof (doc?.changelog as number) === 'number' ? (doc?.changelog as number) : 50),
+   984→      grade: scoreToGrade(docOverall),
+   985→    };
+   986→
+   987→    const aiRecommendations: AIRecommendation[] = recs.map(rec => ({
+   988→      title: String(rec.title || 'Untitled'),
+   989→      description: String(rec.description || ''),
+   990→      category: String(rec.category || 'General'),
+   991→      priority: (['critical', 'high', 'medium', 'low'].includes(String(rec.priority)) ? rec.priority : 'medium') as AIRecommendation['priority'],
+   992→      effort: (['small', 'medium', 'large'].includes(String(rec.effort)) ? rec.effort : 'medium') as AIRecommendation['effort'],
+   993→    }));
+   994→
+   995→    const repoMeta: RepositoryMeta = {
+   996→      name: String(meta.name || repo),
+   997→      owner: String(meta.owner || owner),
+   998→      description: meta.description != null ? String(meta.description) : null,
+   999→      language: meta.language != null ? String(meta.language) : null,
+  1000→      stars: typeof meta.stars === 'number' ? meta.stars : 0,
+  1001→      forks: typeof meta.forks === 'number' ? meta.forks : 0,
+  1002→      openIssues: typeof meta.openIssues === 'number' ? meta.openIssues : 0,
+  1003→      defaultBranch: String(meta.defaultBranch || 'main'),
+  1004→    };
+  1005→
+  1006→    const executiveSummary = typeof data.executiveSummary === 'string'
+  1007→      ? data.executiveSummary
+  1008→      : 'AI analysis completed. No executive summary was generated.';
+  1009→
+  1010→    return {
+  1011→      id: generateId(),
+  1012→      repositoryUrl: url,
+  1013→      repositoryMeta: repoMeta,
+  1014→      governanceScore,
+  1015→      health,
+  1016→      maturity,
+  1017→      risk,
+  1018→      businessImpact,
+  1019→      priorities,
+  1020→      deployment,
+  1021→      security,
+  1022→      documentation,
+  1023→      executiveSummary,
+  1024→      recommendations: aiRecommendations,
+  1025→      provider: response.provider,
+  1026→      analyzedAt: new Date().toISOString(),
+  1027→      durationMs: response.durationMs,
+  1028→    };
+  1029→  } catch {
+  1030→    return null;
+  1031→  }
+  1032→}
+  1033→
+  1034→// ─── Master Function ────────────────────────────────────────────────────────
+  1035→
+  1036→export async function analyzeRepository(url: string): Promise<AnalysisResult> {
+  1037→  const parsed = parseGitHubUrl(url);
+  1038→  if (!parsed) {
+  1039→    throw new Error(
+  1040→      `Invalid GitHub URL: "${url}". Expected format: https://github.com/owner/repo`,
+  1041→    );
+  1042→  }
+  1043→
+  1044→  const { owner, repo } = parsed;
+  1045→  const aiProvider = createAIProvider({ maxTokens: 8192, temperature: 0.3 });
+  1046→  const startTime = Date.now();
+  1047→
+  1048→  // Try AI-powered analysis first
+  1049→  let result = await aiPoweredAnalysis(url, owner, repo, aiProvider);
+  1050→
+  1051→  // Fall back to heuristic-based analysis if AI fails or returns incomplete data
+  1052→  if (!result) {
+  1053→    const elapsed = Date.now() - startTime;
+  1054→    result = generateHeuristicAnalysis(url, owner, repo, elapsed);
+  1055→  } else {
+  1056→    // Ensure durationMs reflects total wall-clock time
+  1057→    result = { ...result, durationMs: Date.now() - startTime };
+  1058→  }
+  1059→
+  1060→  return result;
+  1061→}
+  1062→

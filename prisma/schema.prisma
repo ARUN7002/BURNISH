@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Stores metadata about each analyzed GitHub repository
+model Repository {
+  id            String     @id @default(cuid())
+  url           String     @unique
+  name          String
+  owner         String
+  description   String?
+  language      String?
+  stars         Int        @default(0)
+  forks         Int        @default(0)
+  openIssues    Int        @default(0)
+  defaultBranch String     @default("main")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  analyses      Analysis[]
+}
+
+/// Stores a single analysis run for a repository
+model Analysis {
+  id              String   @id @default(cuid())
+  repositoryId    String
+  repository      Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  // Overall scores
+  governanceScore  Float?
+  healthScore      Float?
+  maturityScore    Float?
+  deploymentScore  Float?
+  overallRisk      Float?
+
+  // Detailed metrics as JSON
+  governanceDetail  String?  // JSON
+  healthDetail      String?  // JSON
+  maturityDetail    String?  // JSON
+  riskDetail        String?  // JSON
+  businessImpact    String?  // JSON
+  prioritiesDetail  String?  // JSON
+  deploymentDetail  String?  // JSON
+  securityDetail    String?  // JSON
+  documentationDetail String? // JSON
+
+  // Generated content
+  executiveSummary  String?
+  recommendations   String?  // JSON array
+
+  // Metadata
+  provider         String   @default("gemini")
+  status           String   @default("pending") // pending, analyzing, completed, failed
+  errorMessage     String?
+  durationMs       Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
