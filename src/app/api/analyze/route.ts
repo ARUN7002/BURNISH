@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'URL required' }, { status: 400 });
     }
 
-    const githubPattern = /^https?:\/(www\.)?github\.com\/[^/]+\/[^/]+/;
+    const githubPattern = /^https?:\/\/(www\.)?github\.com\/[^/]+\/[^/]+/;
     if (!githubPattern.test(url)) {
       return NextResponse.json({ success: false, error: 'Invalid GitHub URL' }, { status: 400 });
     }
