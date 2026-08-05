@@ -52,3 +52,17 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# BURNISH project specifics
+/db/*.db
+/db/*.db-journal
+/download/
+/worklog.md
+/dev.log
+/tool-results/
+/.zscripts/
+/upload/
+/mini-services/
+/examples/
+/scripts/test-*.ts
+Caddyfile
