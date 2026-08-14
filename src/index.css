@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.178 0.005 260);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.178 0.005 260);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.623 0.214 259);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0.015 260);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0.01 260);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0.015 260);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.623 0.214 259);
+  --chart-1: oklch(0.623 0.214 259);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: oklch(0.4 0 0); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: oklch(0.5 0 0); }
+
+.glow-primary { box-shadow: 0 0 20px oklch(0.623 0.214 259 / 20%); }
+.gradient-text {
+  background: linear-gradient(135deg, oklch(0.7 0.2 260), oklch(0.8 0.15 200));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.gradient-border {
+  position: relative; border: 1px solid transparent;
+  background-origin: border-box; background-clip: padding-box, border-box;
+  background-image: linear-gradient(oklch(0.178 0.005 260), oklch(0.178 0.005 260)), linear-gradient(135deg, oklch(0.623 0.214 259), oklch(0.5 0.15 200));
+}
+@keyframes score-fill { from { stroke-dashoffset: 283; } }
+.animate-score-fill { animation: score-fill 1.5s ease-out forwards; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+.card-hover { transition: all 0.2s ease; }
+.card-hover:hover { border-color: oklch(0.623 0.214 259 / 30%); box-shadow: 0 4px 20px oklch(0 0 0 / 30%); transform: translateY(-1px); }
