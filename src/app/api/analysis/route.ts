@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (error) {
+    console.error("[api/analysis] Database error:", error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch analyses' },
       { status: 500 }

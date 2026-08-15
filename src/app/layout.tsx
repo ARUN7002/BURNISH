@@ -28,9 +28,6 @@ export const metadata: Metadata = {
     "deployment readiness",
   ],
   authors: [{ name: "BURNISH Team" }],
-  icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
-  },
 };
 
 export default function RootLayout({

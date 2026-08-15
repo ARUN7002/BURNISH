@@ -1,6 +1,5 @@
 // AI Provider abstraction layer for BURNISH
 // Supports: Gemini (primary), Groq, OpenAI, Claude, Local LLM
-// Uses z-ai-web-dev-sdk for AI interactions
 
 export interface AIProviderConfig {
   provider: 'gemini' | 'groq' | 'openai' | 'claude' | 'local';
